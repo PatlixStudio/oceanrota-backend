@@ -4,7 +4,7 @@ import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 
-@ApiTags('auth')
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
@@ -25,5 +25,11 @@ export class AuthController {
   @ApiOperation({ summary: 'Login and receive JWT' })
   async login(@Body() dto: LoginDto) {
     return this.authService.login(dto.email, dto.password);
+  }
+
+  @Post('forgot-password')
+  @ApiOperation({ summary: 'Send Forgot Password Link' })
+  async forgotPassword(@Body() dto: LoginDto) {
+    return this.authService.forgotPassword(dto.email);
   }
 }

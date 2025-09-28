@@ -44,6 +44,10 @@ export class AuthService {
     return { access_token: this.jwtService.sign(payload) };
   }
 
+  async forgotPassword(email: string) {
+    // TODO: Implement Forgot Password Logic
+  }
+
   async findById(id: number) {
     return this.userRepo.findOne({ where: { id } });
   }
