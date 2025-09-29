@@ -24,6 +24,7 @@ export class AuthController {
   @Post('login')
   @ApiOperation({ summary: 'Login and receive JWT' })
   async login(@Body() dto: LoginDto) {
+    console.log('Incoming DTO:', dto);
     return this.authService.login(dto.email, dto.password);
   }
 

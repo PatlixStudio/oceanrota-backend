@@ -9,6 +9,7 @@ import { UserModule } from './user/user.module';
 import { MarketplaceModule } from './marketplace/marketplace.module';
 import { MarineServicesModule } from './marine-services/marine-services.module';
 import { LearningCenterModule } from './learning-center/learning-center.module';
+import { SeaPersonnelModule } from './sea-personnel/sea-personnel.module';
 
 @Module({
   imports: [
@@ -28,7 +29,8 @@ import { LearningCenterModule } from './learning-center/learning-center.module';
     UserModule,
     MarketplaceModule,
     MarineServicesModule,
-    LearningCenterModule
+    SeaPersonnelModule,
+    LearningCenterModule,
   ],
   controllers: [AppController],
   providers: [AppService],

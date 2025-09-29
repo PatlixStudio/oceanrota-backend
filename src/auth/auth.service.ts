@@ -11,13 +11,14 @@ export class AuthService {
   constructor(
     private jwtService: JwtService,
     @InjectRepository(User) private userRepo: Repository<User>,
-  ) {}
+  ) { }
 
   async hashPassword(password: string) {
     return bcrypt.hash(password, 10);
   }
 
   async validatePassword(password: string, hash: string) {
+    if (!hash) return false; // immediately fail if hash is missing
     return bcrypt.compare(password, hash);
   }
 
@@ -35,10 +36,12 @@ export class AuthService {
 
   async login(email: string, password: string) {
     const user = await this.userRepo.findOne({ where: { email } });
-    if (!user) throw new UnauthorizedException('Invalid credentials');
 
+    // Friendly message if user not found or password not set
+    if (!user) throw new UnauthorizedException('Email or password is incorrect');
+    
     const valid = await this.validatePassword(password, user.passwordHash);
-    if (!valid) throw new UnauthorizedException('Invalid credentials');
+    if (!valid) throw new UnauthorizedException('Email or password is incorrect');
 
     const payload = { sub: user.id, email: user.email, role: user.role };
     return { access_token: this.jwtService.sign(payload) };

@@ -9,12 +9,12 @@ import { User } from 'src/user/entities/user.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]),
-    PassportModule.register({defaultStrategy: 'jwt'}),
     JwtModule.register({
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: process.env.JWT_EXPIRES_IN ||"1d" },
-    })
+    }),
+    PassportModule.register({defaultStrategy: 'jwt'}),
+    TypeOrmModule.forFeature([User])
   ],
   providers: [AuthService, JwtStrategy],
   controllers: [AuthController],
