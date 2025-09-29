@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user/entities/user.entity';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
+import { MarketplaceModule } from './marketplace/marketplace.module';
 
 @Module({
   imports: [
@@ -22,7 +23,8 @@ import { UserModule } from './user/user.module';
       synchronize: true, // only for dev
     }),
     AuthModule,
-    UserModule
+    UserModule,
+    MarketplaceModule
   ],
   controllers: [AppController],
   providers: [AppService],
