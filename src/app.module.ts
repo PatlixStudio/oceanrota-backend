@@ -7,6 +7,7 @@ import { User } from './user/entities/user.entity';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import { MarketplaceModule } from './marketplace/marketplace.module';
+import { MarineServicesModule } from './marine-services/marine-services.module';
 
 @Module({
   imports: [
@@ -24,7 +25,8 @@ import { MarketplaceModule } from './marketplace/marketplace.module';
     }),
     AuthModule,
     UserModule,
-    MarketplaceModule
+    MarketplaceModule,
+    MarineServicesModule
   ],
   controllers: [AppController],
   providers: [AppService],
