@@ -19,7 +19,7 @@ import { UserModule } from './user/user.module';
       database: process.env.DB_NAME,
       entities: [User],
       autoLoadEntities: true,
-      synchronize: false, // only for dev
+      synchronize: true, // only for dev
     }),
     AuthModule,
     UserModule
