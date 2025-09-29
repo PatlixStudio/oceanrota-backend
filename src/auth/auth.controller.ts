@@ -7,15 +7,14 @@ import { LoginDto } from './dto/login.dto';
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) { }
 
   @Post('register')
-  @ApiOperation({ summary: 'Register a new user' })
-  @ApiResponse({ status: 201, description: 'User registered' })
+  @ApiOperation({ summary: 'Register a new user and receive JWT' })
+  @ApiResponse({ status: 201, description: 'User registered and logged in' })
   async register(@Body() dto: RegisterDto) {
     try {
-      const user = await this.authService.register(dto.email, dto.password, dto.name);
-      return { message: 'registered', user };
+      return await this.authService.register(dto);
     } catch (err: any) {
       throw new BadRequestException(err.message || 'Registration failed');
     }
@@ -24,7 +23,6 @@ export class AuthController {
   @Post('login')
   @ApiOperation({ summary: 'Login and receive JWT' })
   async login(@Body() dto: LoginDto) {
-    console.log('Incoming DTO:', dto);
     return this.authService.login(dto.email, dto.password);
   }
 

@@ -1,28 +1,47 @@
+// user.entity.ts
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('users')
 export class User {
-    @PrimaryGeneratedColumn()
-    id!: number;
+  @PrimaryGeneratedColumn()
+  id!: number;
 
-    @Column({ unique: true })
-    username!: string;
+  @Column({ unique: true })
+  username!: string; // e.g., firstName.lastName
 
-    @Column({ unique: true })
-    email!: string;
+  @Column({ unique: true })
+  email!: string;
 
-    @Column()
-    passwordHash!: string;
+  @Column()
+  passwordHash!: string;
 
-    @Column({ nullable: true })
-    name?: string;
+  @Column()
+  firstName!: string;
 
-    @Column({ default: 'user' })
-    role!: string;
+  @Column()
+  lastName!: string;
 
-    @CreateDateColumn()
-    createdAt!: Date;
+  @Column({ nullable: true })
+  fullName?: string; // optional, can be derived from firstName + lastName
 
-    @UpdateDateColumn()
-    updatedAt!: Date;
+  @Column({ nullable: true })
+  avatarUrl?: string; // user profile picture
+
+  @Column({ nullable: true })
+  bio?: string;
+
+  @Column({ type: 'date', nullable: true })
+  birthday?: Date;
+
+  @Column({ default: 'user' })
+  role!: string;
+
+  @Column({ default: true })
+  isActive!: boolean;
+
+  @CreateDateColumn()
+  createdAt!: Date;
+
+  @UpdateDateColumn()
+  updatedAt!: Date;
 }

@@ -12,16 +12,19 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
-  ) {}
+  ) { }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const passwordHash = await bcrypt.hash(createUserDto.password, 10);
 
     const newUser = this.userRepository.create({
+      ...createUserDto,
       username: createUserDto.username,
       email: createUserDto.email,
-      passwordHash,
-      name: createUserDto.name,
+      firstName: createUserDto.firstName,
+      lastName: createUserDto.lastName,
+      fullName: `${createUserDto.firstName} ${createUserDto.lastName}`,
+      passwordHash: passwordHash,
     });
 
     return this.userRepository.save(newUser);
@@ -44,7 +47,15 @@ export class UserService {
       delete updateUserDto.password;
     }
 
-    await this.userRepository.update(id, updateUserDto);
+    // merge the rest of the fields
+    Object.assign(user, {
+      ...updateUserDto,
+      fullName: updateUserDto.firstName && updateUserDto.lastName
+        ? `${updateUserDto.firstName} ${updateUserDto.lastName}`
+        : user.fullName,
+    });
+
+    await this.userRepository.update(id, user);
     return this.userRepository.findOneBy({ id });
   }
 

@@ -9,12 +9,14 @@ import { User } from 'src/user/entities/user.entity';
 
 @Module({
   imports: [
-    JwtModule.register({
-      secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: process.env.JWT_EXPIRES_IN ||"1d" },
-    }),
+    TypeOrmModule.forFeature([User]),
     PassportModule.register({defaultStrategy: 'jwt'}),
-    TypeOrmModule.forFeature([User])
+    JwtModule.registerAsync({
+      useFactory: () => ({
+        secret: process.env.JWT_SECRET,
+        signOptions: { expiresIn: process.env.JWT_EXPIRES_IN || '1d' },
+      }),
+    }),
   ],
   providers: [AuthService, JwtStrategy],
   controllers: [AuthController],

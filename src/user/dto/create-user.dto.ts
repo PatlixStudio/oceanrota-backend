@@ -1,25 +1,55 @@
 // create-user.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional, IsString, IsDateString } from 'class-validator';
 
 export class CreateUserDto {
-  @ApiProperty({ example: 'john_doe', description: 'Username of the user' })
+  @ApiProperty({ example: 'john.doe', description: 'Username of the user, usually firstName.lastName' })
   @IsString()
   @IsNotEmpty()
-  username: string;
+  username!: string;
 
   @ApiProperty({ example: 'john@example.com', description: 'Email of the user' })
   @IsEmail()
   @IsNotEmpty()
-  email: string;
+  email!: string;
 
-  @ApiProperty({ example: 'strongPassword123', description: 'Password' })
+  @ApiProperty({ example: 'StrongPassword123!', description: 'Password' })
   @IsString()
   @IsNotEmpty()
-  password: string;
+  password!: string;
+
+  @ApiProperty({ example: 'John', description: 'First name' })
+  @IsString()
+  @IsNotEmpty()
+  firstName!: string;
+
+  @ApiProperty({ example: 'Doe', description: 'Last name' })
+  @IsString()
+  @IsNotEmpty()
+  lastName!: string;
 
   @ApiProperty({ example: 'John Doe', description: 'Full name', required: false })
   @IsOptional()
   @IsString()
-  name?: string;
+  fullName?: string;
+
+  @ApiProperty({ example: 'https://example.com/avatar.jpg', description: 'Avatar URL', required: false })
+  @IsOptional()
+  @IsString()
+  avatarUrl?: string;
+
+  @ApiProperty({ example: 'Software developer & sailor', description: 'User bio', required: false })
+  @IsOptional()
+  @IsString()
+  bio?: string;
+
+  @ApiProperty({ example: '1990-05-15', description: 'Birthday', required: false })
+  @IsOptional()
+  @IsDateString()
+  birthday?: string;
+
+  @ApiProperty({ example: 'user', description: 'Role of the user', required: false })
+  @IsOptional()
+  @IsString()
+  role?: string;
 }
