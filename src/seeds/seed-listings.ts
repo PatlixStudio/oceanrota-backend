@@ -37,6 +37,28 @@ function randomPriceForType(type: string) {
     }
 }
 
+async function getBoatImages(query: string, count = 3): Promise<string[]> {
+  const accessKey = process.env.UNSPLASH_ACCESS_KEY;
+  const url = `https://api.unsplash.com/photos/random?query=${encodeURIComponent(
+    query
+  )}&count=${count}&client_id=${accessKey}&orientation=landscape`;
+
+  try {
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error(`Unsplash API error: ${resp.statusText}`);
+    const data = await resp.json();
+    return data.map((img: any) => img.urls.regular);
+  } catch (err) {
+    console.error('Error fetching Unsplash images:', err);
+    // fallback to Picsum if Unsplash fails
+    return [
+      `https://picsum.photos/seed/${query}-1/800/600`,
+      `https://picsum.photos/seed/${query}-2/800/600`,
+      `https://picsum.photos/seed/${query}-3/800/600`,
+    ];
+  }
+}
+
 async function seed(count = 20) {
     await AppDataSource.initialize();
     console.log('Data source initialized');
@@ -67,11 +89,7 @@ async function seed(count = 20) {
         const description = faker.lorem.paragraph();
 
         // Dynamic Unsplash images based on type
-        const images = [
-            `https://source.unsplash.com/800x600/?${type.replace(/\s/g, '')}-boat,water`,
-            `https://source.unsplash.com/800x600/?${type.replace(/\s/g, '')}-yacht,marina`,
-            `https://source.unsplash.com/800x600/?${type.replace(/\s/g, '')}-sea,boat`,
-        ];
+        const images = await getBoatImages(type + " boat");
 
         const owner = faker.helpers.arrayElement(users);
 
@@ -93,6 +111,7 @@ async function seed(count = 20) {
             images,
             owner,
             isActive: true,
+            isSeeded: true,
         });
 
         listings.push(listing);

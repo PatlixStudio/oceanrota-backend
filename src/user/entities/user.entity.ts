@@ -13,7 +13,7 @@ export class User {
   email!: string;
 
   @Column({ unique: true, nullable: true })
-  phoneNumber?: string;
+  phoneNumber!: string;
 
   @Column()
   passwordHash!: string;

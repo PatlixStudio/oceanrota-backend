@@ -61,6 +61,9 @@ export class Listing {
   @Column({ default: true })
   isActive!: boolean;
 
+  @Column({ default: false })
+  isSeeded!: boolean;
+
   @CreateDateColumn()
   createdAt!: Date;
 
