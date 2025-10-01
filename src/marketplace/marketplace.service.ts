@@ -10,7 +10,7 @@ export class MarketplaceService {
   constructor(
     @InjectRepository(Listing)
     private listingsRepo: Repository<Listing>,
-  ) {}
+  ) { }
 
   async create(dto: CreateListingDto, userId: number) {
     const listing = this.listingsRepo.create({ ...dto, owner: { id: userId } });
@@ -18,7 +18,11 @@ export class MarketplaceService {
   }
 
   findAll() {
-    return this.listingsRepo.find({ relations: ['owner'] });
+    return this.listingsRepo.find({
+      where: { isActive: true }, // only active listings
+      relations: ['owner'],      // include owner info
+      order: { createdAt: 'DESC' } // optional: newest first
+    });
   }
 
   async findOne(id: number) {
