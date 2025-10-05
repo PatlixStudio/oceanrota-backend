@@ -4,11 +4,11 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule,{ cors: true });
+  const app = await NestFactory.create(AppModule, { cors: true });
 
   // Set global API prefix
   app.setGlobalPrefix('api/v1');
-  
+
   // Enable global validation
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: false }));
 

@@ -10,6 +10,8 @@ import { MarketplaceModule } from './marketplace/marketplace.module';
 import { MarineServicesModule } from './marine-services/marine-services.module';
 import { LearningCenterModule } from './learning-center/learning-center.module';
 import { SeaPersonnelModule } from './sea-personnel/sea-personnel.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -25,6 +27,14 @@ import { SeaPersonnelModule } from './sea-personnel/sea-personnel.module';
       autoLoadEntities: true,
       synchronize: true, // only for dev
     }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'uploads'),
+      exclude: ['/api/{*test}'],
+      serveRoot: '/uploads',
+      serveStaticOptions: {
+        fallthrough: false,
+      },
+    }),
     AuthModule,
     UserModule,
     MarketplaceModule,
@@ -35,4 +45,4 @@ import { SeaPersonnelModule } from './sea-personnel/sea-personnel.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

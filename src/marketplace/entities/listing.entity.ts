@@ -1,11 +1,28 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+  OneToMany,
+  JoinColumn,
+} from 'typeorm';
 import { User } from '../../user/entities/user.entity';
+import { Engine } from './engine.entity';
+
+export enum ListingStatus {
+  DRAFT = 'draft',
+  PUBLISHED = 'published',
+  SOLD = 'sold',
+}
 
 @Entity('listings')
 export class Listing {
   @PrimaryGeneratedColumn()
   id!: number;
 
+  /** Basic Info */
   @Column()
   title!: string;
 
@@ -13,23 +30,28 @@ export class Listing {
   description!: string;
 
   @Column()
-  category!: string; // Power / Sail / Other
+  category!: string; // e.g., Power / Sail / Other
 
-  @Column()
-  boatClass!: string; // e.g., Cruiser, Motor Yacht, Trawler
+  @Column({ nullable: true })
+  boatType?: string; // e.g., Catamaran, Yacht
 
-  @Column()
-  make!: string; // e.g., Sea Ray, Beneteau
+  @Column({ nullable: true })
+  boatClass?: string; // e.g., Cruiser, Motor Yacht
 
-  @Column()
-  boatType!: string; // Sailboat, Motorboat, Yacht, etc.
+  @Column({ nullable: true })
+  make?: string; // e.g., Beneteau
 
+  @Column({ nullable: true })
+  model?: string; // e.g., 47 Power
+
+  /** Pricing */
   @Column({ type: 'decimal', nullable: true })
   price?: number;
 
   @Column({ nullable: true })
   currency?: string; // USD, EUR, etc.
 
+  /** Location */
   @Column({ nullable: true })
   country?: string;
 
@@ -39,18 +61,72 @@ export class Listing {
   @Column({ nullable: true })
   port?: string;
 
+  /** Specifications */
   @Column({ type: 'decimal', nullable: true })
   length_m?: number;
+
+  @Column({ type: 'decimal', nullable: true })
+  beam_m?: number;
+
+  @Column({ type: 'decimal', nullable: true })
+  draft_m?: number;
+
+  @Column({ type: 'decimal', nullable: true })
+  weight_kg?: number;
 
   @Column({ nullable: true })
   year?: number;
 
   @Column({ nullable: true })
-  condition?: string; // New, Excellent, Good, etc.
+  condition?: string; // New / Excellent / Used
 
+  @Column({ nullable: true })
+  hullMaterial?: string; // e.g., Fiberglass
+
+  @Column({ nullable: true })
+  capacity?: string; // e.g., "8 people"
+
+  /** Accommodations */
+  @Column({ type: 'int', nullable: true })
+  guestCabins?: number;
+
+  @Column({ type: 'int', nullable: true })
+  guestHeads?: number;
+
+  /** Tanks (in gallons) */
+  @Column({ type: 'decimal', nullable: true })
+  fuelTank_liter?: number;
+
+  @Column({ type: 'decimal', nullable: true })
+  waterTank_liter?: number;
+
+  @Column({ type: 'decimal', nullable: true })
+  holdingTank_liter?: number;
+
+  /** Relations */
+  @OneToMany(() => Engine, (engine) => engine.listing, {
+    cascade: true,
+    eager: true,
+  })
+  engines?: Engine[];
+
+  /** Features (flexible JSON field for custom specs) */
+  @Column({ type: 'jsonb', nullable: true })
+  features?: Record<string, any>;
+
+  /** Media */
   @Column('text', { array: true, nullable: true })
   images?: string[];
 
+  /** Status */
+  @Column({
+    type: 'enum',
+    enum: ListingStatus,
+    default: ListingStatus.DRAFT,
+  })
+  status!: ListingStatus;
+
+  /** Owner Relation */
   @ManyToOne(() => User, (user) => user.id, { eager: true })
   @JoinColumn({ name: 'ownerId' })
   owner!: User;
@@ -58,12 +134,14 @@ export class Listing {
   @Column()
   ownerId!: number;
 
+  /** Flags */
   @Column({ default: true })
   isActive!: boolean;
 
   @Column({ default: false })
   isSeeded!: boolean;
 
+  /** Timestamps */
   @CreateDateColumn()
   createdAt!: Date;
 
