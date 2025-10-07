@@ -3,6 +3,8 @@ import { DataSource } from 'typeorm';
 import { User } from './user/entities/user.entity';
 import * as dotenv from 'dotenv';
 import { Listing } from './marketplace/entities/listing.entity';
+import { MarineService } from './marine-services/entities/service.entity';
+import { Engine } from './marketplace/entities/engine.entity';
 
 dotenv.config();
 
@@ -13,7 +15,7 @@ export const AppDataSource = new DataSource({
   username: process.env.DB_USER,
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
-  entities: [User, Listing],
+  entities: [User, Listing, Engine, MarineService],
   migrations: ['src/migrations/*.ts'],
   synchronize: true,
 });

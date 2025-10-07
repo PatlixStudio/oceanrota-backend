@@ -20,7 +20,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "seed:boat-listings": "ts-node -r tsconfig-paths/register src/seeds/seed-listings.ts",
-    "seed:delete-listings": "ts-node -r tsconfig-paths/register src/seeds/delete-listings.ts"
+    "seed:delete-listings": "ts-node -r tsconfig-paths/register src/seeds/delete-listings.ts",
+    "seed:marine-services": "ts-node -r tsconfig-paths/register src/seeds/marine-services.seed.ts"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
