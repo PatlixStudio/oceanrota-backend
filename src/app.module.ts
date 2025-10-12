@@ -11,6 +11,7 @@ import { MarineServicesModule } from './marine-services/marine-services.module';
 import { LearningCenterModule } from './learning-center/learning-center.module';
 import { SeaPersonnelModule } from './sea-personnel/sea-personnel.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { SeaJobsModule } from './sea-jobs/sea-jobs.module';
 import { join } from 'path';
 
 @Module({
@@ -39,6 +40,7 @@ import { join } from 'path';
     UserModule,
     MarketplaceModule,
     MarineServicesModule,
+    SeaJobsModule,
     SeaPersonnelModule,
     LearningCenterModule,
   ],

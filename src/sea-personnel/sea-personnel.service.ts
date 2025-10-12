@@ -10,15 +10,23 @@ export class SeaPersonnelService {
   constructor(
     @InjectRepository(SeaPersonnel)
     private repo: Repository<SeaPersonnel>,
-  ) {}
+  ) { }
 
   create(dto: CreateSeaPersonnelDto) {
     const personnel = this.repo.create(dto);
     return this.repo.save(personnel);
   }
 
-  findAll() {
-    return this.repo.find();
+  async findAllPaginated(
+    page = 1,
+    limit = 10,
+  ): Promise<{ data: SeaPersonnel[]; total: number; page: number; limit: number }> {
+    const [data, total] = await this.repo.findAndCount({
+      order: { createdAt: 'DESC' },
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+    return { data, total, page, limit };
   }
 
   findOne(id: number) {
