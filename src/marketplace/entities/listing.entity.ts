@@ -33,6 +33,9 @@ export class Listing {
   category!: string; // e.g., Power / Sail / Other
 
   @Column({ nullable: true })
+  listingType!: string;
+
+  @Column({ nullable: true })
   boatType?: string; // e.g., Catamaran, Yacht
 
   @Column({ nullable: true })

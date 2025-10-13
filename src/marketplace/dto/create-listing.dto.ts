@@ -27,6 +27,10 @@ export class CreateListingDto {
   @IsString()
   category!: string; // Power / Sail / Other
 
+  @IsNotEmpty()
+  @IsString()
+  listingType!: string; // Power / Sail / Other
+
   @IsOptional()
   @IsString()
   boatType?: string; // Sailboat, Yacht, etc.

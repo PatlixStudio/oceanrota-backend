@@ -1,5 +1,5 @@
-import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Req, UploadedFiles, UseInterceptors } from '@nestjs/common';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Query, Req, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { MarketplaceService } from './marketplace.service';
 import { CreateListingDto } from './dto/create-listing.dto';
 import { UpdateListingDto } from './dto/update-listing.dto';
@@ -9,6 +9,7 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
+import { Listing } from './entities/listing.entity';
 
 const UPLOAD_DIR = './uploads/images';
 if (!existsSync(UPLOAD_DIR)) {
@@ -39,14 +40,7 @@ const multerOptions = {
 @ApiTags('Marketplace')
 @Controller('marketplace/listings')
 export class MarketplaceController {
-  constructor(private readonly marketplaceService: MarketplaceService) {}
-
-  // @Post()
-  // @ApiOperation({ summary: 'Create new listing' })
-  // create(@Body() dto: CreateListingDto) {
-  //   // TODO: attach current userId from auth guard
-  //   return this.marketplaceService.create(dto, 1);
-  // }
+  constructor(private readonly marketplaceService: MarketplaceService) { }
 
   @Post()
   @UseInterceptors(FilesInterceptor('images', 10, multerOptions))
@@ -85,9 +79,30 @@ export class MarketplaceController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get all listings' })
-  findAll() {
-    return this.marketplaceService.findAll();
+  @ApiOperation({ summary: 'Get all active boat listings (paginated, sortable, filterable)' })
+  @ApiQuery({ name: 'page', required: false, example: 1 })
+  @ApiQuery({ name: 'limit', required: false, example: 10 })
+  @ApiQuery({ name: 'sort', required: false, example: 'newest' })
+  @ApiQuery({ name: 'listingType', required: false, example: 'sale' })
+  @ApiQuery({ name: 'boatType', required: false, example: 'Sailboat' })
+  @ApiQuery({ name: 'condition', required: false, example: 'Used' })
+  @ApiQuery({ name: 'maker', required: false, example: 'Beneteau' })
+  @ApiQuery({ name: 'country', required: false, example: 'Italy' })
+  @ApiQuery({ name: 'minPrice', required: false, example: 20000 })
+  @ApiQuery({ name: 'maxPrice', required: false, example: 500000 })
+  @ApiQuery({ name: 'minLength', required: false, example: 10 })
+  @ApiQuery({ name: 'maxLength', required: false, example: 30 })
+  @ApiQuery({ name: 'year', required: false, example: 2020 })
+  @ApiQuery({ name: 'fuel', required: false, example: 'Diesel' })
+  @ApiQuery({ name: 'hullMaterial', required: false, example: 'Fiberglass' })
+  @ApiResponse({ status: 200, description: 'Filtered and paginated listings' })
+  async findAllPaginated(
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
+    @Query('sort') sort = 'newest',
+    @Query() filters: any,
+  ) {
+    return this.marketplaceService.findAllPaginated(page, limit, sort, filters);
   }
 
   @Get(':id')
