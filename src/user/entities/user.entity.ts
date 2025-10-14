@@ -39,6 +39,21 @@ export class User {
   @Column({ default: 'user' })
   role!: string;
 
+  @Column({ nullable: true })
+  walletAddress?: string;   // Public address of the user's wallet
+
+  @Column({ nullable: true })
+  walletSecret?: string;    // Secret/seed for the wallet (keep securely!)
+
+  @Column({ type: 'decimal', nullable: true })
+  walletBalance?: number;   // Optional: track balance in XRP or platform token
+
+  @Column({ default: false })
+  isWalletCreated!: boolean;
+
+  @Column({ default: false })
+  isVerified!: boolean;
+
   @Column({ default: true })
   isActive!: boolean;
 

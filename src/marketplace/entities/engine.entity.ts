@@ -5,7 +5,7 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { Listing } from './listing.entity';
+import { Vessel } from './vessel.entity';
 
 @Entity('engines')
 export class Engine {
@@ -30,10 +30,11 @@ export class Engine {
   @Column({ nullable: true })
   engineHours?: string; // e.g., "400h"
 
-  @ManyToOne(() => Listing, (listing) => listing.engines)
-  @JoinColumn({ name: 'listingId' })
-  listing!: Listing;
+  /** Relation to Vessel */
+  @ManyToOne(() => Vessel, (vessel) => vessel.engines, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'vesselId' })
+  vessel!: Vessel;
 
   @Column()
-  listingId!: number;
+  vesselId!: string;
 }

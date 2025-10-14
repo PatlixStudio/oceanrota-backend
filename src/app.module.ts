@@ -13,6 +13,7 @@ import { SeaPersonnelModule } from './sea-personnel/sea-personnel.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { SeaJobsModule } from './sea-jobs/sea-jobs.module';
 import { join } from 'path';
+import { TokenizationModule } from './tokenization/tokenization.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { join } from 'path';
     SeaJobsModule,
     SeaPersonnelModule,
     LearningCenterModule,
+    TokenizationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

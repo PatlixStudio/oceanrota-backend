@@ -1,4 +1,17 @@
-import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Query, Req, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  Req,
+  UploadedFiles,
+  UseInterceptors,
+} from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { MarketplaceService } from './marketplace.service';
 import { CreateListingDto } from './dto/create-listing.dto';
@@ -9,7 +22,6 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
-import { Listing } from './entities/listing.entity';
 
 const UPLOAD_DIR = './uploads/images';
 if (!existsSync(UPLOAD_DIR)) {
@@ -22,13 +34,10 @@ const multerOptions = {
     filename: (req, file, cb) => {
       const unique = Date.now() + '-' + Math.round(Math.random() * 1e9);
       cb(null, unique + extname(file.originalname));
-    }
+    },
   }),
-  limits: {
-    fileSize: 5 * 1024 * 1024, // 5 MB per file, for example
-  },
+  limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: (req: any, file: Express.Multer.File, cb: (error: Error | null, acceptFile: boolean) => void) => {
-    // accept images only
     if (!file.mimetype.startsWith('image/')) {
       return cb(new BadRequestException('Only image files are allowed'), false);
     }
@@ -36,11 +45,10 @@ const multerOptions = {
   },
 };
 
-
 @ApiTags('Marketplace')
 @Controller('marketplace/listings')
 export class MarketplaceController {
-  constructor(private readonly marketplaceService: MarketplaceService) { }
+  constructor(private readonly marketplaceService: MarketplaceService) {}
 
   @Post()
   @UseInterceptors(FilesInterceptor('images', 10, multerOptions))
@@ -49,18 +57,34 @@ export class MarketplaceController {
     @Body() body: any,
     @Req() req: any,
   ) {
-    // map files to URLs
     const host = req.protocol + '://' + req.get('host');
     const imageUrls = (files || []).map(file => `${host}/uploads/images/${file.filename}`);
 
-    // rebuild payload for DTO
+    // Map payload for DTO: listing + nested vessel
     const payload = {
       ...body,
       images: imageUrls,
-      // convert numeric fields from strings, if needed
       price: body.price ? Number(body.price) : undefined,
-      length_m: body.length_m ? Number(body.length_m) : undefined,
-      year: body.year ? Number(body.year) : undefined,
+      vessel: {
+        vesselName: body.vesselName,
+        boatType: body.boatType,
+        boatClass: body.boatClass,
+        make: body.make,
+        model: body.model,
+        length_m: body.length_m ? Number(body.length_m) : undefined,
+        beam_m: body.beam_m ? Number(body.beam_m) : undefined,
+        draft_m: body.draft_m ? Number(body.draft_m) : undefined,
+        weight_kg: body.weight_kg ? Number(body.weight_kg) : undefined,
+        year: body.year ? Number(body.year) : undefined,
+        hullMaterial: body.hullMaterial,
+        capacity: body.capacity,
+        guestCabins: body.guestCabins ? Number(body.guestCabins) : undefined,
+        guestHeads: body.guestHeads ? Number(body.guestHeads) : undefined,
+        fuelTank_liter: body.fuelTank_liter ? Number(body.fuelTank_liter) : undefined,
+        waterTank_liter: body.waterTank_liter ? Number(body.waterTank_liter) : undefined,
+        holdingTank_liter: body.holdingTank_liter ? Number(body.holdingTank_liter) : undefined,
+        features: body.features ? JSON.parse(body.features) : undefined,
+      },
     };
 
     const dto = plainToInstance(CreateListingDto, payload);
@@ -69,13 +93,13 @@ export class MarketplaceController {
       throw new BadRequestException(errors);
     }
 
-    // // Determine ownerId (from req.user if using an auth guard)
-    // const ownerId = req.user?.id;
-    // if (!ownerId) {
-    //   throw new BadRequestException('User must be authenticated');
-    // }
+    // Determine ownerId (from req.user if using an auth guard)
+    const ownerId = req.user?.id;
+    if (!ownerId) {
+      throw new BadRequestException('User must be authenticated');
+    }
 
-    return this.marketplaceService.create(dto, 4);
+    return this.marketplaceService.create(dto, ownerId);
   }
 
   @Get()
@@ -83,18 +107,18 @@ export class MarketplaceController {
   @ApiQuery({ name: 'page', required: false, example: 1 })
   @ApiQuery({ name: 'limit', required: false, example: 10 })
   @ApiQuery({ name: 'sort', required: false, example: 'newest' })
-  @ApiQuery({ name: 'listingType', required: false, example: 'sale' })
-  @ApiQuery({ name: 'boatType', required: false, example: 'Sailboat' })
-  @ApiQuery({ name: 'condition', required: false, example: 'Used' })
-  @ApiQuery({ name: 'maker', required: false, example: 'Beneteau' })
-  @ApiQuery({ name: 'country', required: false, example: 'Italy' })
-  @ApiQuery({ name: 'minPrice', required: false, example: 20000 })
-  @ApiQuery({ name: 'maxPrice', required: false, example: 500000 })
-  @ApiQuery({ name: 'minLength', required: false, example: 10 })
-  @ApiQuery({ name: 'maxLength', required: false, example: 30 })
-  @ApiQuery({ name: 'year', required: false, example: 2020 })
-  @ApiQuery({ name: 'fuel', required: false, example: 'Diesel' })
-  @ApiQuery({ name: 'hullMaterial', required: false, example: 'Fiberglass' })
+  @ApiQuery({ name: 'listingType', required: false })
+  @ApiQuery({ name: 'boatType', required: false })
+  @ApiQuery({ name: 'condition', required: false })
+  @ApiQuery({ name: 'maker', required: false })
+  @ApiQuery({ name: 'country', required: false })
+  @ApiQuery({ name: 'minPrice', required: false })
+  @ApiQuery({ name: 'maxPrice', required: false })
+  @ApiQuery({ name: 'minLength', required: false })
+  @ApiQuery({ name: 'maxLength', required: false })
+  @ApiQuery({ name: 'year', required: false })
+  @ApiQuery({ name: 'fuel', required: false })
+  @ApiQuery({ name: 'hullMaterial', required: false })
   @ApiResponse({ status: 200, description: 'Filtered and paginated listings' })
   async findAllPaginated(
     @Query('page') page = 1,

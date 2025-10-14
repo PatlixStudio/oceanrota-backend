@@ -7,7 +7,7 @@ async function deleteAllListings() {
     console.log('Data source initialized');
 
     const repo = AppDataSource.getRepository(Listing);
-    const result = await repo.delete({ isSeeded: true });
+    const result = await repo.delete({ isSeed: true });
 
     console.log(`Deleted ${result.affected} seeded listings`);
     await AppDataSource.destroy();
