@@ -1,6 +1,7 @@
 import { IsNotEmpty, IsOptional, IsString, IsNumber, Min, IsBoolean, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { CreateVesselDto } from './create-vessel.dto';
+import { ListingType } from '../entities/listing.entity';
 
 export class CreateListingDto {
   @IsNotEmpty()
@@ -17,7 +18,7 @@ export class CreateListingDto {
 
   @IsNotEmpty()
   @IsString()
-  listingType!: string; // Sale / Rent / Both
+  listingType!: ListingType; // Sale / Rent / Both
 
   @IsOptional()
   @IsNumber()

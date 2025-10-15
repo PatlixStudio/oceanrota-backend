@@ -16,6 +16,12 @@ export enum ListingStatus {
   SOLD = 'sold',
 }
 
+export enum ListingType{
+  ALL = 'All',
+  RENT = 'Rent',
+  SELL = 'Sale',
+}
+
 @Entity('listings')
 export class Listing {
   @PrimaryGeneratedColumn()
@@ -36,6 +42,9 @@ export class Listing {
 
   @Column({ default: 'draft', type: 'enum', enum: ListingStatus })
   status!: ListingStatus;
+
+  @Column({ default: 'All', type: 'enum', enum: ListingType })
+  listingType!: ListingType;
 
   /** Owner */
   @ManyToOne(() => User, { eager: true })

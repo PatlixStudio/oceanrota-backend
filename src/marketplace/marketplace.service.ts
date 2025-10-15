@@ -20,72 +20,100 @@ export class MarketplaceService {
   findAll() {
     return this.listingsRepo.find({
       where: { isActive: true }, // only active listings
-      relations: ['owner'],      // include owner info
+      relations: ['owner', 'vessel'],      // include owner info
       order: { createdAt: 'DESC' } // optional: newest first
     });
   }
 
   async findAllPaginated(page = 1, limit = 10, sort = 'newest', filters: any) {
-    const query = this.listingsRepo.createQueryBuilder('boat')
-      .where('boat.isActive = :active', { active: true });
+    const query = this.listingsRepo
+      .createQueryBuilder('listing')
+      .leftJoinAndSelect('listing.owner', 'owner')
+      .leftJoinAndSelect('listing.vessel', 'vessel')
+      .where('listing.isActive = :active', { active: true });
 
     // --- FILTERS ---
+
+    // Listing-level filters
     if (filters.listingType && filters.listingType !== 'All') {
-      query.andWhere('boat.listingType = :listingType', { listingType: filters.listingType });
+      query.andWhere('listing.listingType = :listingType', { listingType: filters.listingType });
     }
 
     if (filters.condition && filters.condition !== 'All') {
-      query.andWhere('boat.condition = :condition', { condition: filters.condition });
+      query.andWhere('vessel.condition = :condition', { condition: filters.condition });
     }
 
-    if (filters.maker) {
-      query.andWhere('boat.maker ILIKE :maker', { maker: `%${filters.maker}%` });
+    if (filters.make) {
+      query.andWhere('vessel.make ILIKE :make', { make: `%${filters.make}%` });
     }
 
     if (filters.country) {
-      query.andWhere('boat.country ILIKE :country', { country: `%${filters.country}%` });
+      query.andWhere('vessel.country ILIKE :country', { country: `%${filters.country}%` });
+    }
+
+    if (filters.city) {
+      query.andWhere('vessel.city ILIKE :city', { city: `%${filters.city}%` });
+    }
+
+    if (filters.port) {
+      query.andWhere('vessel.port ILIKE :port', { port: `%${filters.port}%` });
     }
 
     if (filters.minPrice) {
-      query.andWhere('boat.price >= :minPrice', { minPrice: +filters.minPrice });
+      query.andWhere('listing.price >= :minPrice', { minPrice: +filters.minPrice });
     }
 
     if (filters.maxPrice) {
-      query.andWhere('boat.price <= :maxPrice', { maxPrice: +filters.maxPrice });
+      query.andWhere('listing.price <= :maxPrice', { maxPrice: +filters.maxPrice });
     }
 
     if (filters.minLength) {
-      query.andWhere('boat.length >= :minLength', { minLength: +filters.minLength });
+      query.andWhere('vessel.length_m >= :minLength', { minLength: +filters.minLength });
     }
 
     if (filters.maxLength) {
-      query.andWhere('boat.length <= :maxLength', { maxLength: +filters.maxLength });
+      query.andWhere('vessel.length_m <= :maxLength', { maxLength: +filters.maxLength });
     }
 
     if (filters.year) {
-      query.andWhere('boat.year = :year', { year: +filters.year });
+      query.andWhere('vessel.year = :year', { year: +filters.year });
     }
 
-    if (filters.fuel) {
-      query.andWhere('boat.fuelType ILIKE :fuel', { fuel: `%${filters.fuel}%` });
+    if (filters.fuelType) {
+      query.andWhere('vessel.features ->> \'fuelType\' ILIKE :fuelType', { fuelType: `%${filters.fuelType}%` });
     }
 
     if (filters.hullMaterial) {
-      query.andWhere('boat.hullMaterial ILIKE :hullMaterial', {
+      query.andWhere('vessel.hullMaterial ILIKE :hullMaterial', {
         hullMaterial: `%${filters.hullMaterial}%`,
       });
     }
 
     // --- SORTING ---
     switch (sort) {
-      case 'oldest': query.orderBy('boat.createdAt', 'ASC'); break;
-      case 'priceHigh': query.orderBy('boat.price', 'DESC'); break;
-      case 'priceLow': query.orderBy('boat.price', 'ASC'); break;
-      case 'yearNew': query.orderBy('boat.year', 'DESC'); break;
-      case 'yearOld': query.orderBy('boat.year', 'ASC'); break;
-      case 'lengthLong': query.orderBy('boat.length_m', 'DESC'); break;
-      case 'lengthShort': query.orderBy('boat.length_m', 'ASC'); break;
-      default: query.orderBy('boat.createdAt', 'DESC');
+      case 'oldest':
+        query.orderBy('listing.createdAt', 'ASC');
+        break;
+      case 'priceHigh':
+        query.orderBy('listing.price', 'DESC');
+        break;
+      case 'priceLow':
+        query.orderBy('listing.price', 'ASC');
+        break;
+      case 'yearNew':
+        query.orderBy('vessel.year', 'DESC');
+        break;
+      case 'yearOld':
+        query.orderBy('vessel.year', 'ASC');
+        break;
+      case 'lengthLong':
+        query.orderBy('vessel.length_m', 'DESC');
+        break;
+      case 'lengthShort':
+        query.orderBy('vessel.length_m', 'ASC');
+        break;
+      default:
+        query.orderBy('listing.createdAt', 'DESC');
     }
 
     // --- PAGINATION ---
@@ -102,6 +130,7 @@ export class MarketplaceService {
       totalPages: Math.ceil(total / limit),
     };
   }
+
 
   async findOne(id: number) {
     const listing = await this.listingsRepo.findOne({ where: { id }, relations: ['owner'] });

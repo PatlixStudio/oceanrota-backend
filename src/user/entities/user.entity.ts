@@ -1,4 +1,5 @@
 // user.entity.ts
+import { Exclude } from 'class-transformer';
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('users')
@@ -15,6 +16,7 @@ export class User {
   @Column({ unique: true, nullable: true })
   phoneNumber!: string;
 
+  @Exclude()
   @Column()
   passwordHash!: string;
 
@@ -42,9 +44,11 @@ export class User {
   @Column({ nullable: true })
   walletAddress?: string;   // Public address of the user's wallet
 
+  @Exclude()
   @Column({ nullable: true })
   walletSecret?: string;    // Secret/seed for the wallet (keep securely!)
-
+  
+  @Exclude()
   @Column({ type: 'decimal', nullable: true })
   walletBalance?: number;   // Optional: track balance in XRP or platform token
 
