@@ -18,15 +18,26 @@ export class CreateListingDto {
 
   @IsNotEmpty()
   @IsString()
-  listingType!: ListingType; // Sale / Rent / Both
+  listingType!: ListingType; // Sale / Rent / All
+
+  /** mapped from salePrice */
+  @IsOptional()
+  @IsNumber()
+  salePrice?: number;
 
   @IsOptional()
   @IsNumber()
-  price?: number;
+  rentPrice?: number;
 
   @IsOptional()
   @IsString()
   currency?: string;
+  
+  @IsOptional() @IsBoolean() featured?: boolean;
+
+    /** file name stored after upload */
+  @IsOptional() @IsString() featuredImage?: string;
+  
 
   @IsOptional()
   @IsBoolean()

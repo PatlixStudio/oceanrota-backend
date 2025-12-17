@@ -1,5 +1,6 @@
 import { IsOptional, IsString, IsNumber, Min, Max, IsArray, IsObject, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
+import { CreateEngineDto } from './create-engine.dto';
 
 export class CreateVesselDto {
   @IsString()
@@ -84,4 +85,11 @@ export class CreateVesselDto {
   @IsArray()
   @IsString({ each: true })
   images?: string[];
+
+  /** Engines array */
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateEngineDto)
+  engines?: CreateEngineDto[];
 }
