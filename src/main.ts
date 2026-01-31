@@ -34,7 +34,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('OceanRota API')
     .setDescription('OceanRota backend API docs')
-    .setVersion('0.1')
+    .setVersion('0.2')
     .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' }, 'JWT')
     .build();
 

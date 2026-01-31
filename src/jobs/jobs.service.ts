@@ -1,26 +1,26 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { SeaJob } from './entities/sea-jobs.entity';
-import { SeaPersonnel } from '../sea-personnel/entities/sea-personnel.entity';
-import { CreateSeaJobDto } from './dto/create-sea-job.dto';
-import { UpdateSeaJobDto } from './dto/update-sea-job.dto';
+import { Job } from './entities/jobs.entity';
+import { Crew } from '../crew/entities/crew.entity';
+import { CreateJobDto } from './dto/create-job.dto';
+import { UpdateJobDto } from './dto/update-job.dto';
 
 @Injectable()
-export class SeaJobsService {
+export class JobsService {
     constructor(
-        @InjectRepository(SeaJob)
-        private readonly jobRepo: Repository<SeaJob>,
-        @InjectRepository(SeaPersonnel)
-        private readonly personnelRepo: Repository<SeaPersonnel>,
+        @InjectRepository(Job)
+        private readonly jobRepo: Repository<Job>,
+        @InjectRepository(Crew)
+        private readonly crewRepo: Repository<Crew>,
     ) { }
 
-    async create(dto: CreateSeaJobDto): Promise<SeaJob> {
+    async create(dto: CreateJobDto): Promise<Job> {
         const job = this.jobRepo.create(dto);
         return this.jobRepo.save(job);
     }
 
-    async findAllPaginated(page = 1, limit = 10): Promise<{ data: SeaJob[]; total: number; page: number; limit: number }> {
+    async findAllPaginated(page = 1, limit = 10): Promise<{ data: Job[]; total: number; page: number; limit: number }> {
         const [data, total] = await this.jobRepo.findAndCount({
             order: { createdAt: 'DESC' },
             skip: (page - 1) * limit,
@@ -30,13 +30,13 @@ export class SeaJobsService {
         return { data, total, page, limit };
     }
 
-    async findOne(id: number): Promise<SeaJob> {
+    async findOne(id: number): Promise<Job> {
         const job = await this.jobRepo.findOneBy({ id });
         if (!job) throw new NotFoundException(`SeaJob with ID ${id} not found`);
         return job;
     }
 
-    async update(id: number, dto: UpdateSeaJobDto): Promise<SeaJob> {
+    async update(id: number, dto: UpdateJobDto): Promise<Job> {
         const result = await this.jobRepo.update(id, dto);
         if (result.affected === 0) throw new NotFoundException(`SeaJob with ID ${id} not found`);
         return this.findOne(id);
@@ -47,11 +47,11 @@ export class SeaJobsService {
         if (result.affected === 0) throw new NotFoundException(`SeaJob with ID ${id} not found`);
     }
 
-    async searchCandidates(jobId: number, filters?: { position?: string; experienceYears?: number }): Promise<SeaPersonnel[]> {
+    async searchCandidates(jobId: number, filters?: { position?: string; experienceYears?: number }): Promise<Crew[]> {
         const job = await this.jobRepo.findOneBy({ id: jobId });
         if (!job) throw new NotFoundException(`SeaJob with ID ${jobId} not found`);
 
-        const query = this.personnelRepo.createQueryBuilder('p').where('p.isActive = :active', { active: true });
+        const query = this.crewRepo.createQueryBuilder('p').where('p.isActive = :active', { active: true });
 
         if (filters?.position) query.andWhere('p.position = :position', { position: filters.position });
         if (filters?.experienceYears) query.andWhere('p.experienceYears >= :exp', { exp: filters.experienceYears });

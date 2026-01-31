@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { SeaPersonnel } from './entities/sea-personnel.entity';
-import { CreateSeaPersonnelDto } from './dto/create-sea-personnel.dto';
-import { UpdateSeaPersonnelDto } from './dto/update-sea-personnel.dto';
+import { Crew } from './entities/crew.entity';
+import { CreateCrewDto } from './dto/create-crew.dto';
+import { UpdateCrewDto } from './dto/update-crew.dto';
 
 @Injectable()
-export class SeaPersonnelService {
+export class CrewService {
   constructor(
-    @InjectRepository(SeaPersonnel)
-    private repo: Repository<SeaPersonnel>,
+    @InjectRepository(Crew)
+    private repo: Repository<Crew>,
   ) { }
 
-  create(dto: CreateSeaPersonnelDto) {
+  create(dto: CreateCrewDto) {
     const personnel = this.repo.create(dto);
     return this.repo.save(personnel);
   }
@@ -20,7 +20,7 @@ export class SeaPersonnelService {
   async findAllPaginated(
     page = 1,
     limit = 10,
-  ): Promise<{ data: SeaPersonnel[]; total: number; page: number; limit: number }> {
+  ): Promise<{ data: Crew[]; total: number; page: number; limit: number }> {
     const [data, total] = await this.repo.findAndCount({
       order: { createdAt: 'DESC' },
       skip: (page - 1) * limit,
@@ -33,7 +33,7 @@ export class SeaPersonnelService {
     return this.repo.findOneBy({ id });
   }
 
-  async update(id: number, dto: UpdateSeaPersonnelDto) {
+  async update(id: number, dto: UpdateCrewDto) {
     await this.repo.update(id, dto);
     return this.findOne(id);
   }

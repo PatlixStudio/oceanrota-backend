@@ -9,11 +9,12 @@ import { UserModule } from './user/user.module';
 import { MarketplaceModule } from './marketplace/marketplace.module';
 import { MarineServicesModule } from './marine-services/marine-services.module';
 import { LearningCenterModule } from './learning-center/learning-center.module';
-import { SeaPersonnelModule } from './sea-personnel/sea-personnel.module';
-import { ServeStaticModule } from '@nestjs/serve-static';
-import { SeaJobsModule } from './sea-jobs/sea-jobs.module';
-import { join } from 'path';
+import { CrewModule } from './crew/crew.module';
+import { JobsModule } from './jobs/jobs.module';
+import { MarineEquipmentModule } from './marine-equipment/marine-equipment.module';
 import { TokenizationModule } from './tokenization/tokenization.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -40,9 +41,10 @@ import { TokenizationModule } from './tokenization/tokenization.module';
     AuthModule,
     UserModule,
     MarketplaceModule,
+    MarineEquipmentModule,
     MarineServicesModule,
-    SeaJobsModule,
-    SeaPersonnelModule,
+    JobsModule,
+    CrewModule,
     LearningCenterModule,
     TokenizationModule,
   ],

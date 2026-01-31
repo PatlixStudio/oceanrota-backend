@@ -2,7 +2,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from '../app.module';
 import { DataSource } from 'typeorm';
-import { SeaPersonnel } from '../sea-personnel/entities/sea-personnel.entity';
+import { Crew } from '../crew/entities/crew.entity';
 import { faker } from '@faker-js/faker';
 
 // Maritime-related positions
@@ -34,8 +34,8 @@ const certifications = [
   'Environmental Compliance',
 ];
 
-function generateSeedData(count = 33): Partial<SeaPersonnel>[] {
-  const data: Partial<SeaPersonnel>[] = [];
+function generateSeedData(count = 33): Partial<Crew>[] {
+  const data: Partial<Crew>[] = [];
 
   for (let i = 0; i < count; i++) {
     const position = faker.helpers.arrayElement(positions);
@@ -71,7 +71,7 @@ function generateSeedData(count = 33): Partial<SeaPersonnel>[] {
 async function runSeeder() {
   const appContext = await NestFactory.createApplicationContext(AppModule);
   const dataSource = appContext.get(DataSource);
-  const repo = dataSource.getRepository(SeaPersonnel);
+  const repo = dataSource.getRepository(Crew);
 
   const action = process.argv[2]; // "seed" or "clear"
 
@@ -82,7 +82,7 @@ async function runSeeder() {
     } else {
       const seedData = generateSeedData(33);
       await repo.save(seedData);
-      console.log(`🌱 Inserted ${seedData.length} SeaPersonnel seed records successfully.`);
+      console.log(`🌱 Inserted ${seedData.length} Crew seed records successfully.`);
     }
   } else if (action === 'clear') {
     const result = await repo.delete({ isSeeded: true });

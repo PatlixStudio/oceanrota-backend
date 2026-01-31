@@ -1,12 +1,12 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from '../app.module';
-import { SeaJobsService } from '../sea-jobs/sea-jobs.service';
-import { CreateSeaJobDto } from '../sea-jobs/dto/create-sea-job.dto';
+import { JobsService } from '../jobs/jobs.service';
+import { CreateJobDto } from '../jobs/dto/create-job.dto';
 import { faker } from '@faker-js/faker';
 
 async function runSeeder() {
   const appContext = await NestFactory.createApplicationContext(AppModule);
-  const seaJobsService = appContext.get(SeaJobsService);
+  const seaJobsService = appContext.get(JobsService);
 
   const action = process.argv[2]; // "seed" or "clear"
 
@@ -16,7 +16,7 @@ async function runSeeder() {
     if (existingJobs.data.some(j => j.isSeed)) {
       console.log('✅ Seed data already exists. Skipping insertion.');
     } else {
-      const seedData: CreateSeaJobDto[] = generateJobs(33);
+      const seedData: CreateJobDto[] = generateJobs(33);
       for (const job of seedData) {
         await seaJobsService.create(job);
       }
@@ -38,11 +38,11 @@ async function runSeeder() {
   process.exit(0);
 }
 
-function generateJobs(count = 33): CreateSeaJobDto[] {
+function generateJobs(count = 33): CreateJobDto[] {
   const positions = ['Captain', 'Chief Engineer', 'First Officer', 'Cook', 'Navigator', 'Deckhand'];
   const certifications = ['Master Mariner', 'Marine Engineering', 'STCW Safety', 'Navigation Expert'];
 
-  const jobs: CreateSeaJobDto[] = [];
+  const jobs: CreateJobDto[] = [];
 
   for (let i = 0; i < count; i++) {
     const position = faker.helpers.arrayElement(positions);

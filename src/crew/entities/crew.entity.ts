@@ -8,7 +8,7 @@ import {
 import { ApiProperty } from '@nestjs/swagger';
 
 @Entity('sea_personnel')
-export class SeaPersonnel {
+export class Crew {
   @ApiProperty({ example: 1 })
   @PrimaryGeneratedColumn()
   id: number;

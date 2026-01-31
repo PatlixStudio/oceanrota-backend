@@ -1,6 +1,6 @@
 {
   "name": "oceanrota-backend",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "",
   "author": "",
   "private": true,
@@ -22,10 +22,10 @@
     "seed:boat-listings": "ts-node -r tsconfig-paths/register src/seeds/seed-listings.ts",
     "seed:delete-listings": "ts-node -r tsconfig-paths/register src/seeds/delete-listings.ts",
     "seed:marine-services": "ts-node -r tsconfig-paths/register src/seeds/marine-services.seed.ts",
-    "seed:sea-jobs": "ts-node -r tsconfig-paths/register src/seeds/sea-jobs.seed.ts seed",
-    "seed:sea-jobs:clear": "ts-node -r tsconfig-paths/register src/seeds/sea-jobs.seed.ts clear",
-    "seed:sea-personnel": "ts-node -r tsconfig-paths/register src/seeds/sea-personnel.seed.ts seed",
-    "seed:sea-personnel:clear": "ts-node -r tsconfig-paths/register src/seeds/sea-personnel.seed.ts clear"
+    "seed:sea-jobs": "ts-node -r tsconfig-paths/register src/seeds/jobs.seed.ts seed",
+    "seed:sea-jobs:clear": "ts-node -r tsconfig-paths/register src/seeds/jobs.seed.ts clear",
+    "seed:sea-personnel": "ts-node -r tsconfig-paths/register src/seeds/crew.seed.ts seed",
+    "seed:sea-personnel:clear": "ts-node -r tsconfig-paths/register src/seeds/crew.seed.ts clear"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",

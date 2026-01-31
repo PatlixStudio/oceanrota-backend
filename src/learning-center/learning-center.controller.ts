@@ -14,7 +14,7 @@ export class LearningCenterController {
   constructor(private readonly svc: LearningCenterService) {}
 
   // Courses
-  @Post('courses')
+  @Post('course')
   @ApiOperation({ summary: 'Create a new course' })
   @ApiResponse({ status: 201, type: Course })
   async createCourse(@Body() dto: CreateCourseDto) {
@@ -27,26 +27,26 @@ export class LearningCenterController {
     return this.svc.findAllCourses();
   }
 
-  @Get('courses/:id')
+  @Get('course/:id')
   @ApiOperation({ summary: 'Get course details' })
   findCourse(@Param('id', ParseIntPipe) id: number) {
     return this.svc.findCourse(id);
   }
 
-  @Put('courses/:id')
+  @Put('course/:id')
   @ApiOperation({ summary: 'Update a course' })
   async updateCourse(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateCourseDto) {
     throw new Error('Hook current instructor user here');
   }
 
-  @Delete('courses/:id')
+  @Delete('course/:id')
   @ApiOperation({ summary: 'Delete a course' })
   async removeCourse(@Param('id', ParseIntPipe) id: number) {
     throw new Error('Hook current instructor user here');
   }
 
   // Enrollments
-  @Post('courses/:id/enroll')
+  @Post('course/:id/enroll')
   @ApiOperation({ summary: 'Enroll in a course' })
   @ApiResponse({ status: 201, type: Enrollment })
   async enroll(@Param('id', ParseIntPipe) id: number) {

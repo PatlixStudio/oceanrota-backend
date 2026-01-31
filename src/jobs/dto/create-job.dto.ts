@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsOptional, IsNumber, IsBoolean, IsArray } from 'class-validator';
 
-export class CreateSeaJobDto {
+export class CreateJobDto {
     @ApiProperty({ example: 'Captain for Cargo Ship' })
     @IsString()
     title: string;

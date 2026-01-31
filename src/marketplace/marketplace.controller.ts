@@ -45,7 +45,7 @@ const multerOptions = {
   },
 };
 
-@ApiTags('Marketplace')
+@ApiTags('Vessel Marketplace')
 @Controller('marketplace/listings')
 export class MarketplaceController {
   constructor(private readonly marketplaceService: MarketplaceService) {}
