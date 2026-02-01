@@ -15,6 +15,7 @@ import { MarineEquipmentModule } from './marine-equipment/marine-equipment.modul
 import { TokenizationModule } from './tokenization/tokenization.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { PaymentModule } from './payment/payment.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { join } from 'path';
     CrewModule,
     LearningCenterModule,
     TokenizationModule,
+    PaymentModule,
   ],
   controllers: [AppController],
   providers: [AppService],
