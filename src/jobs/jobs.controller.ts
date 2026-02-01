@@ -6,7 +6,7 @@ import { Crew } from '../crew/entities/crew.entity';
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
 
-@ApiTags('Maritime Jobs')
+@ApiTags('Seafarer Employment (Maritime Jobs)')
 @Controller('jobs')
 export class JobsController {
     constructor(private readonly jobsService: JobsService) { }

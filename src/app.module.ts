@@ -7,11 +7,11 @@ import { User } from './user/entities/user.entity';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import { MarketplaceModule } from './marketplace/marketplace.module';
-import { MarineServicesModule } from './marine-services/marine-services.module';
+import { MaritimeServicesModule } from './maritime-services/maritime-services.module';
 import { LearningCenterModule } from './learning-center/learning-center.module';
 import { CrewModule } from './crew/crew.module';
 import { JobsModule } from './jobs/jobs.module';
-import { MarineEquipmentModule } from './marine-equipment/marine-equipment.module';
+import { MaritimeEquipmentModule } from './maritime-equipment/maritime-equipment.module';
 import { TokenizationModule } from './tokenization/tokenization.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
@@ -42,8 +42,8 @@ import { PaymentModule } from './payment/payment.module';
     AuthModule,
     UserModule,
     MarketplaceModule,
-    MarineEquipmentModule,
-    MarineServicesModule,
+    MaritimeEquipmentModule,
+    MaritimeServicesModule,
     JobsModule,
     CrewModule,
     LearningCenterModule,

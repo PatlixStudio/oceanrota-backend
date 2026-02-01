@@ -1,6 +1,6 @@
 import { User } from 'src/user/entities/user.entity';
 import { AppDataSource } from '../data-source';
-import { MarineService } from 'src/marine-services/entities/service.entity';
+import { MaritimeService } from 'src/maritime-services/entities/service.entity';
 
 const MARINE_SERVICES = [
     {
@@ -151,7 +151,7 @@ async function seedMarineServices() {
     console.log('✅ Connected to database...');
 
     const userRepo = AppDataSource.getRepository(User);
-    const serviceRepo = AppDataSource.getRepository(MarineService);
+    const serviceRepo = AppDataSource.getRepository(MaritimeService);
 
     const defaultUser = await userRepo.findOne({ where: { id: 4 } });
     if (!defaultUser) {

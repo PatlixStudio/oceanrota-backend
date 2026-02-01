@@ -5,7 +5,7 @@ import { CreateCrewDto } from './dto/create-crew.dto';
 import { UpdateCrewDto } from './dto/update-crew.dto';
 import { Crew } from './entities/crew.entity';
 
-@ApiTags('Crew')
+@ApiTags('Crew & Seafarer Management')
 @Controller('crew')
 export class CrewController {
   constructor(private readonly seaPersonnelService: CrewService) { }

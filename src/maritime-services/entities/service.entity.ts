@@ -10,7 +10,7 @@ import { User } from '../../user/entities/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
 @Entity('marine_services')
-export class MarineService {
+export class MaritimeService {
   @ApiProperty()
   @PrimaryGeneratedColumn()
   id!: number;

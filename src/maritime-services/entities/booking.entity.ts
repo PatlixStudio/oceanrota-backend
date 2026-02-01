@@ -5,7 +5,7 @@ import {
   Column,
   CreateDateColumn,
 } from 'typeorm';
-import { MarineService } from './service.entity';
+import { MaritimeService } from './service.entity';
 import { User } from '../../user/entities/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -15,9 +15,9 @@ export class ServiceBooking {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @ApiProperty({ type: () => MarineService })
-  @ManyToOne(() => MarineService, { eager: true })
-  service!: MarineService;
+  @ApiProperty({ type: () => MaritimeService })
+  @ManyToOne(() => MaritimeService, { eager: true })
+  service!: MaritimeService;
 
   @ApiProperty({ type: () => User })
   @ManyToOne(() => User, { eager: true })

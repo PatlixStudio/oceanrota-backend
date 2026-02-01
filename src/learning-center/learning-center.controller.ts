@@ -8,7 +8,7 @@ import { Enrollment } from './entities/enrollment.entity';
 
 // TODO: Add JwtAuthGuard + CurrentUser decorator
 
-@ApiTags('Learning Center')
+@ApiTags('Maritime Training & Certification (Learning Center)')
 @Controller('learning-center')
 export class LearningCenterController {
   constructor(private readonly svc: LearningCenterService) {}

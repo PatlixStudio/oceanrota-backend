@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { MarineService } from './entities/service.entity';
+import { MaritimeService } from './entities/service.entity';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
 import { ServiceBooking } from './entities/booking.entity';
@@ -9,10 +9,10 @@ import { CreateBookingDto } from './dto/create-booking.dto';
 import { User } from '../user/entities/user.entity';
 
 @Injectable()
-export class MarineServicesService {
+export class MaritimeServicesService {
   constructor(
-    @InjectRepository(MarineService)
-    private servicesRepo: Repository<MarineService>,
+    @InjectRepository(MaritimeService)
+    private servicesRepo: Repository<MaritimeService>,
     @InjectRepository(ServiceBooking)
     private bookingsRepo: Repository<ServiceBooking>,
   ) {}

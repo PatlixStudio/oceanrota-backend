@@ -10,26 +10,26 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { MarineServicesService } from './marine-services.service';
+import { MaritimeServicesService } from './maritime-services.service';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
 import { CreateBookingDto } from './dto/create-booking.dto';
-import { MarineService } from './entities/service.entity';
+import { MaritimeService } from './entities/service.entity';
 import { ServiceBooking } from './entities/booking.entity';
 
 // TODO: import and use JwtAuthGuard and a CurrentUser decorator
 // import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 // import { CurrentUser } from '../auth/current-user.decorator';
 
-@ApiTags('Marine Services')
-@Controller('marine-services')
-export class MarineServicesController {
-  constructor(private readonly svc: MarineServicesService) {}
+@ApiTags('Maritime Services')
+@Controller('martime-services')
+export class MaritimeServicesController {
+  constructor(private readonly svc: MaritimeServicesService) {}
 
   // -------- Services CRUD --------
   @Post('services')
   @ApiOperation({ summary: 'Create a marine service' })
-  @ApiResponse({ status: 201, type: MarineService })
+  @ApiResponse({ status: 201, type: MaritimeService })
   // @UseGuards(JwtAuthGuard)
   async createService(
     // @CurrentUser() user: User,
@@ -42,7 +42,7 @@ export class MarineServicesController {
 
   @Get('services')
   @ApiOperation({ summary: 'List all marine services' })
-  @ApiResponse({ status: 200, type: [MarineService] })
+  @ApiResponse({ status: 200, type: [MaritimeService] })
   findAllServices() {
     return this.svc.findAllServices();
   }

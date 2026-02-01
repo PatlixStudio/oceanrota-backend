@@ -6,7 +6,7 @@ import { TokenizeVesselDto } from './dto/tokenize-vessel.dto';
 import { TransferTokenDto } from './dto/transfer-token.dto';
 import { FractionalizeDto } from './dto/fractionalize.dto';
 
-@ApiTags('Tokenization')
+@ApiTags('Digital Asset & Vessel Tokenization')
 @Controller('tokenization')
 export class TokenizationController {
   constructor(private readonly tokenService: TokenizationService) {}
