@@ -10,6 +10,7 @@ import {
   Query,
   Req,
   UploadedFiles,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
@@ -17,90 +18,60 @@ import { MarketplaceService } from './marketplace.service';
 import { CreateListingDto } from './dto/create-listing.dto';
 import { UpdateListingDto } from './dto/update-listing.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { existsSync, mkdirSync } from 'fs';
-import { diskStorage } from 'multer';
-import { extname } from 'path';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { multerOptions } from 'src/config/multer.config';
+import { randomUUID } from 'crypto';
 
-const UPLOAD_DIR = './uploads/images';
-if (!existsSync(UPLOAD_DIR)) {
-  mkdirSync(UPLOAD_DIR, { recursive: true });
-}
-
-const multerOptions = {
-  storage: diskStorage({
-    destination: UPLOAD_DIR,
-    filename: (req, file, cb) => {
-      const unique = Date.now() + '-' + Math.round(Math.random() * 1e9);
-      cb(null, unique + extname(file.originalname));
-    },
-  }),
-  limits: { fileSize: 5 * 1024 * 1024 },
-  fileFilter: (req: any, file: Express.Multer.File, cb: (error: Error | null, acceptFile: boolean) => void) => {
-    if (!file.mimetype.startsWith('image/')) {
-      return cb(new BadRequestException('Only image files are allowed'), false);
-    }
-    cb(null, true);
-  },
-};
 
 @ApiTags('Vessel Marketplace')
 @Controller('marketplace/listings')
 export class MarketplaceController {
-  constructor(private readonly marketplaceService: MarketplaceService) {}
+  constructor(private readonly marketplaceService: MarketplaceService) { }
 
   @Post()
-  @UseInterceptors(FilesInterceptor('images', 10, multerOptions))
+  @ApiOperation({ summary: 'Create a new vessel listing with images' })
+  @UseGuards(JwtAuthGuard)
   async create(
-    @UploadedFiles() files: Express.Multer.File[],
-    @Body() body: any,
+    @Body() data: CreateListingDto,
     @Req() req: any,
   ) {
-    const host = req.protocol + '://' + req.get('host');
-    const imageUrls = (files || []).map(file => `${host}/uploads/images/${file.filename}`);
 
-    // Map payload for DTO: listing + nested vessel
-    const payload = {
-      ...body,
-      images: imageUrls,
-      price: body.price ? Number(body.price) : undefined,
-      vessel: {
-        vesselName: body.vesselName,
-        boatType: body.boatType,
-        boatClass: body.boatClass,
-        make: body.make,
-        model: body.model,
-        length_m: body.length_m ? Number(body.length_m) : undefined,
-        beam_m: body.beam_m ? Number(body.beam_m) : undefined,
-        draft_m: body.draft_m ? Number(body.draft_m) : undefined,
-        weight_kg: body.weight_kg ? Number(body.weight_kg) : undefined,
-        year: body.year ? Number(body.year) : undefined,
-        hullMaterial: body.hullMaterial,
-        capacity: body.capacity,
-        guestCabins: body.guestCabins ? Number(body.guestCabins) : undefined,
-        guestHeads: body.guestHeads ? Number(body.guestHeads) : undefined,
-        fuelTank_liter: body.fuelTank_liter ? Number(body.fuelTank_liter) : undefined,
-        waterTank_liter: body.waterTank_liter ? Number(body.waterTank_liter) : undefined,
-        holdingTank_liter: body.holdingTank_liter ? Number(body.holdingTank_liter) : undefined,
-        features: body.features ? JSON.parse(body.features) : undefined,
-      },
-    };
+    const user = req.user;
+    if (!user) throw new BadRequestException('User must be authenticated');
 
-    const dto = plainToInstance(CreateListingDto, payload);
+    const dto = plainToInstance(CreateListingDto, data);
+
     const errors = await validate(dto);
     if (errors.length) {
       throw new BadRequestException(errors);
     }
-
-    // Determine ownerId (from req.user if using an auth guard)
-    const ownerId = req.user?.id;
-    if (!ownerId) {
-      throw new BadRequestException('User must be authenticated');
-    }
-
-    return this.marketplaceService.create(dto, ownerId);
+    return this.marketplaceService.create(dto, user.id);
   }
+
+  @Post(':id/images')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FilesInterceptor('images', 10, multerOptions('gallery')))
+  async uploadImages(
+    @Param('id') listingId: string,
+    @UploadedFiles() files: Express.Multer.File[],
+    @Req() req: any
+  ) {
+    const userId = req.user.id;
+
+    const host = `${req.protocol}://${req.get('host')}`;
+    const folder = `users/${userId}/listings/${listingId}/gallery`;
+
+    const urls = files.map(
+      f => `${host}/uploads/${folder}/${f.filename}`
+    );
+
+    await this.marketplaceService.attachImages(listingId, urls);
+
+    return { success: true, urls };
+  }
+
 
   @Get()
   @ApiOperation({ summary: 'Get all active boat listings (paginated, sortable, filterable)' })

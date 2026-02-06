@@ -1,7 +1,7 @@
-import { IsNotEmpty, IsOptional, IsString, IsNumber, Min, IsBoolean, ValidateNested } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, IsNumber, Min, IsBoolean, ValidateNested, IsEnum, IsDate, IsArray } from 'class-validator';
 import { Type } from 'class-transformer';
 import { CreateVesselDto } from './create-vessel.dto';
-import { ListingType } from '../entities/listing.entity';
+import { FeaturedPlan, ListingPurpose, ListingStatus, ListingVisibility } from 'src/common/enums/listing-enums';
 
 export class CreateListingDto {
   @IsNotEmpty()
@@ -18,7 +18,7 @@ export class CreateListingDto {
 
   @IsNotEmpty()
   @IsString()
-  listingType!: ListingType; // Sale / Rent / All
+  listingPurpose!: ListingPurpose; // Sale / Rent / All
 
   /** mapped from salePrice */
   @IsOptional()
@@ -32,11 +32,37 @@ export class CreateListingDto {
   @IsOptional()
   @IsString()
   currency?: string;
+
+  /** Location */
+  @IsOptional() @IsString() country?: string;
+  @IsOptional() @IsString() city?: string;
+  @IsOptional() @IsString() port?: string;
+
+  /** Visibility & Promotion */
+  @IsOptional() @IsEnum(ListingVisibility)
+  visibilityType?: ListingVisibility;
+
+  @IsOptional() @IsEnum(FeaturedPlan)
+  featuredPlan?: FeaturedPlan;
+
+  @IsOptional() @IsDate()
+  @Type(() => Date)
+  featuredUntil?: Date;
   
   @IsOptional() @IsBoolean() featured?: boolean;
 
+  /** Images */
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  images?: string[];
+
     /** file name stored after upload */
   @IsOptional() @IsString() featuredImage?: string;
+
+   /** Status */
+  @IsOptional() @IsEnum(ListingStatus)
+  status?: ListingStatus;
   
 
   @IsOptional()

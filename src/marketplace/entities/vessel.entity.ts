@@ -32,9 +32,9 @@ export class Vessel {
   @Column({ type: 'decimal', nullable: true }) weight_kg?: number;
   @Column({ nullable: true }) year?: number;
   @Column({ nullable: true }) hullMaterial?: string;
-  @Column({ nullable: true }) capacity?: string;
+  @Column({ nullable: true }) capacity?: number;
 
-   /** Location & Registration */
+  /** Location & Registration */
   @Column({ nullable: true })
   country?: string;             // Country of registration / current location
 
@@ -57,7 +57,7 @@ export class Vessel {
   @Column({ type: 'jsonb', nullable: true }) features?: Record<string, any>;
 
   /** Media */
-  @Column('text', { array: true, nullable: true }) images?: string[];
+  @Column('text', { array: true, nullable: true, default:[] }) images?: string[];
 
   /** Engines */
   @OneToMany(() => Engine, (engine) => engine.vessel, {
@@ -67,8 +67,10 @@ export class Vessel {
   engines?: Engine[];
 
   /** Ownership */
-  @ManyToOne(() => User, { eager: true })
-  owner: User;
+  @ManyToOne(() => User, { eager: false })
+  @JoinColumn({ name: 'ownerId' })
+  owner!: User;
+
   @Column() ownerId: number;
 
   /** Blockchain / Tokenization */

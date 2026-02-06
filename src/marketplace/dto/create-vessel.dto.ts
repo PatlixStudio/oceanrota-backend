@@ -54,8 +54,8 @@ export class CreateVesselDto {
   hullMaterial?: string;
 
   @IsOptional()
-  @IsString()
-  capacity?: string;
+  @IsNumber()
+  capacity?: number;
 
   @IsOptional()
   @IsNumber()

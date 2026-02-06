@@ -1,9 +1,10 @@
 import 'reflect-metadata';
 import { AppDataSource } from '../data-source';
-import { Listing, ListingStatus } from '../marketplace/entities/listing.entity';
+import { Listing } from '../marketplace/entities/listing.entity';
 import { Vessel } from '../marketplace/entities/vessel.entity';
 import { User } from '../user/entities/user.entity';
 import { faker } from '@faker-js/faker';
+import { ListingStatus } from 'src/common/enums/listing-enums';
 
 const CATEGORIES = ['Power', 'Sail', 'Other'];
 const BOAT_CLASSES = [
@@ -70,7 +71,7 @@ async function seed(count = 20) {
     const length_m = faker.number.float({ min: 3, max: 40, fractionDigits: 2 });
     const condition = faker.helpers.arrayElement(CONDITIONS);
     const port = faker.helpers.arrayElement(PORTS);
-    const price = Number(randomPriceForType(type).toFixed(2));
+    const salePrice = Number(randomPriceForType(type).toFixed(2));
     const currency = faker.helpers.arrayElement(['USD', 'EUR', 'AUD', 'SGD']);
 
     const title = `${make} ${type} — ${Math.round(length_m)}m ${year}`;
@@ -104,11 +105,11 @@ async function seed(count = 20) {
     const listing = listingRepo.create({
       title,
       description,
-      price,
+      salePrice,
       currency,
       owner,
       vessel,
-      status: ListingStatus.PUBLISHED,  // ✅ use enum, not string
+      status: ListingStatus.ACTIVE,  // ✅ use enum, not string
       isActive: true,
       isSeed: true,
       isNewArrival: faker.datatype.boolean(),

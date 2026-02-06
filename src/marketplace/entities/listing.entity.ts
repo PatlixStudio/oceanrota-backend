@@ -6,21 +6,11 @@ import {
   JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToOne,
 } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
 import { Vessel } from './vessel.entity';
-
-export enum ListingStatus {
-  DRAFT = 'draft',
-  PUBLISHED = 'published',
-  SOLD = 'sold',
-}
-
-export enum ListingType{
-  ALL = 'All',
-  RENT = 'Rent',
-  SELL = 'Sale',
-}
+import { ListingStatus, ListingPurpose } from 'src/common/enums/listing-enums';
 
 @Entity('listings')
 export class Listing {
@@ -35,16 +25,19 @@ export class Listing {
   description!: string;
 
   @Column({ type: 'decimal', nullable: true })
-  price?: number;
+  salePrice?: number;
+
+  @Column({ type: 'decimal', nullable: true })
+  rentPrice?: number;
 
   @Column({ nullable: true })
   currency?: string;
 
-  @Column({ default: 'draft', type: 'enum', enum: ListingStatus })
+  @Column({ type: 'enum', enum: ListingStatus, default: ListingStatus.DRAFT, })
   status!: ListingStatus;
 
-  @Column({ default: 'All', type: 'enum', enum: ListingType })
-  listingType!: ListingType;
+  @Column({ type: 'enum', enum: ListingPurpose, default: 'ALL' })
+  listingType!: ListingPurpose;
 
   /** Owner */
   @ManyToOne(() => User, { eager: true })
@@ -53,9 +46,10 @@ export class Listing {
   @Column() ownerId: number;
 
   /** Relation to Vessel */
-  @ManyToOne(() => Vessel, { eager: true, cascade: true })
+  @OneToOne(() => Vessel, { eager: true, cascade: true })
   @JoinColumn({ name: 'vesselId' })
   vessel!: Vessel;
+
   @Column({ nullable: true }) vesselId: string;
 
   /** Featured / Promotion Flags */

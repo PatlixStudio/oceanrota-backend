@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Listing } from './entities/listing.entity';
@@ -13,8 +13,38 @@ export class MarketplaceService {
   ) { }
 
   async create(dto: CreateListingDto, userId: number) {
-    const listing = this.listingsRepo.create({ ...dto, owner: { id: userId } });
+    const listing = this.listingsRepo.create({
+      ...dto,
+      owner: { id: userId },
+      vessel: {
+        ...dto.vessel,
+        owner: { id: userId },
+      },
+    });
     return this.listingsRepo.save(listing);
+  }
+
+  /** 👇 THIS IS WHAT YOU WERE MISSING */
+  async attachImages(listingId: string, urls: string[]) {
+    const listing = await this.listingsRepo.findOne({
+      where: { id: Number(listingId) },
+      relations: ['vessel'],
+    });
+
+    if (!listing) {
+      throw new NotFoundException('Listing not found');
+    }
+
+    if (!listing.vessel) {
+      throw new BadRequestException('Listing has no vessel');
+    }
+
+    listing.vessel.images = [
+      ...(listing.vessel.images ?? []),
+      ...urls,
+    ];
+
+    await this.listingsRepo.save(listing);
   }
 
   findAll() {
