@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
 import { Engine } from './engine.entity';
+import { Address } from 'src/common/embedables/address.embedded';
 
 @Entity('vessels')
 export class Vessel {
@@ -35,14 +36,8 @@ export class Vessel {
   @Column({ nullable: true }) capacity?: number;
 
   /** Location & Registration */
-  @Column({ nullable: true })
-  country?: string;             // Country of registration / current location
-
-  @Column({ nullable: true })
-  city?: string;                // Nearest marina city
-
-  @Column({ nullable: true })
-  port?: string;                // Home port or current dock
+  @Column(() => Address, { prefix: 'vessel_address_' })
+  address?: Address;
 
   /** Accommodations */
   @Column({ type: 'int', nullable: true }) guestCabins?: number;
@@ -57,7 +52,7 @@ export class Vessel {
   @Column({ type: 'jsonb', nullable: true }) features?: Record<string, any>;
 
   /** Media */
-  @Column('text', { array: true, nullable: true, default:[] }) images?: string[];
+  @Column('text', { array: true, nullable: true, default: [] }) images?: string[];
 
   /** Engines */
   @OneToMany(() => Engine, (engine) => engine.vessel, {
