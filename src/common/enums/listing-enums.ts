@@ -7,6 +7,10 @@ export enum FeaturedPlan {
   FEATURED_7 = 'FEATURED_7',
   FEATURED_14 = 'FEATURED_14',
   FEATURED_30 = 'FEATURED_30',
+  FEATURED_60 = 'FEATURED_60',
+  FEATURED_90 = 'FEATURED_90',
+  FEATURED_120 = 'FEATURED_120',
+  FEATURED_180 = 'FEATURED_180',
 }
 
 export enum ListingStatus {
@@ -17,7 +21,7 @@ export enum ListingStatus {
   ARCHIVED = 'ARCHIVED',
 }
 
-export enum ListingPurpose{
+export enum ListingPurpose {
   ALL = 'ALL',
   RENT = 'RENT',
   SELL = 'SALE'

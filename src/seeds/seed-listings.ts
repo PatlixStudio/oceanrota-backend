@@ -64,7 +64,7 @@ async function seed(count = 20) {
   for (let i = 0; i < count; i++) {
     const type = faker.helpers.arrayElement(BOAT_TYPES);
     const category = faker.helpers.arrayElement(CATEGORIES);
-    const boatClass = faker.helpers.arrayElement(BOAT_CLASSES);
+    const vesselClass = faker.helpers.arrayElement(BOAT_CLASSES);
     const make = faker.helpers.arrayElement(MAKES);
 
     const year = faker.number.int({ min: 1970, max: 2025 });
@@ -79,22 +79,28 @@ async function seed(count = 20) {
     const owner = faker.helpers.arrayElement(users);
 
     const images = await getBoatImages(type + ' boat');
+    
 
     /** Step 1: Create vessel */
     const vessel = vesselRepo.create({
       vesselName: `${make} ${type} ${year}`,
       category,
-      boatType: type,
-      boatClass,
+      vesselType: type,
+      vesselClass,
       make,
       model: faker.vehicle.model(),
       length_m,
       year,
       condition,
-      port,
+      address: {
+        address_1: faker.location.streetAddress(),
+        address_2: faker.location.secondaryAddress(),
+        city: faker.location.city(),
+        country: faker.location.country(),
+        state: faker.location.state(),
+        postal_code: faker.location.zipCode(),
+      },
       images,
-      country: faker.location.country(),
-      city: faker.location.city(),
       tokenizationStatus: 'not_tokenized', // ✅ correct field instead of isTokenized
       owner: owner,                        
       ownerId: owner.id,                   

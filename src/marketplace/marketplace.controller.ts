@@ -39,10 +39,7 @@ export class MarketplaceController {
   ) {
 
     const user = req.user;
-    if (!user) throw new BadRequestException('User must be authenticated');
-
     const dto = plainToInstance(CreateListingDto, data);
-
     const errors = await validate(dto);
     if (errors.length) {
       throw new BadRequestException(errors);
@@ -79,7 +76,7 @@ export class MarketplaceController {
   @ApiQuery({ name: 'limit', required: false, example: 10 })
   @ApiQuery({ name: 'sort', required: false, example: 'newest' })
   @ApiQuery({ name: 'listingType', required: false })
-  @ApiQuery({ name: 'boatType', required: false })
+  @ApiQuery({ name: 'vesselType', required: false })
   @ApiQuery({ name: 'condition', required: false })
   @ApiQuery({ name: 'maker', required: false })
   @ApiQuery({ name: 'country', required: false })

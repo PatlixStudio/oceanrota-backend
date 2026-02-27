@@ -1,4 +1,4 @@
-import { IsOptional, IsString, IsNumber, Min, Max, IsArray, IsObject, ValidateNested } from 'class-validator';
+import { IsOptional, IsString, IsNumber, Min, Max, IsArray, IsObject, ValidateNested, IsNotEmpty, Matches } from 'class-validator';
 import { Type } from 'class-transformer';
 import { CreateEngineDto } from './create-engine.dto';
 
@@ -8,11 +8,11 @@ export class CreateVesselDto {
 
   @IsOptional()
   @IsString()
-  boatType?: string;
+  vesselType?: string;
 
   @IsOptional()
   @IsString()
-  boatClass?: string;
+  vesselClass?: string;
 
   @IsOptional()
   @IsString()
@@ -21,6 +21,10 @@ export class CreateVesselDto {
   @IsOptional()
   @IsString()
   model?: string;
+
+  @IsNotEmpty()
+  @IsString()
+  category!: string; // Power / Sail / Other
 
   @IsOptional()
   @IsNumber()
@@ -44,6 +48,15 @@ export class CreateVesselDto {
   @Min(1900)
   @Max(new Date().getFullYear())
   year?: number;
+
+  @IsOptional()
+  @IsString()
+  registryNumber?: string;
+
+  @IsOptional()
+  @IsString() 
+  @Matches(/^IMO\s?\d{7}$/)
+  imoNumber?: string;
 
   @IsOptional()
   @IsString()
@@ -92,4 +105,17 @@ export class CreateVesselDto {
   @ValidateNested({ each: true })
   @Type(() => CreateEngineDto)
   engines?: CreateEngineDto[];
+
+  /** Address for the vessel */
+  @IsOptional()
+  @IsObject()
+  address?: {
+    address_1?: string;
+    address_2?: string;
+    country?: string;
+    city?: string;
+    port?: string;
+    statet?: string;
+    postal_code?: string;
+  };
 }

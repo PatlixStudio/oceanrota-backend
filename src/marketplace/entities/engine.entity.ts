@@ -13,7 +13,7 @@ export class Engine {
   id!: number;
 
   @Column({ nullable: true })
-  engineMake?: string; // Volvo Penta, Yamaha, etc.
+  brand?: string; // Volvo Penta, Yamaha, etc.
 
   @Column({ nullable: true })
   model?: string; // e.g., D4-300
@@ -27,8 +27,8 @@ export class Engine {
   @Column({ nullable: true })
   fuelType?: string; // e.g., Diesel
 
-  @Column({ nullable: true })
-  engineHours?: string; // e.g., "400h"
+  @Column({ type: 'int', nullable: true })
+  hours?: number // e.g., "400h"
 
   /** Relation to Vessel */
   @ManyToOne(() => Vessel, (vessel) => vessel.engines, { onDelete: 'CASCADE' })

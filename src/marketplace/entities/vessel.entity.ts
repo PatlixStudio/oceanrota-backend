@@ -20,8 +20,8 @@ export class Vessel {
   /** Official Vessel Info */
   @Column() vesselName: string;           // official name
   @Column({ nullable: true }) category?: string;            // Power / Sail / Other
-  @Column({ nullable: true }) boatType?: string;    // Catamaran, Yacht
-  @Column({ nullable: true }) boatClass?: string;   // Cruiser, Motor Yacht
+  @Column({ nullable: true }) vesselType?: string;    // Catamaran, Yacht
+  @Column({ nullable: true }) vesselClass?: string;   // Cruiser, Motor Yacht
   @Column({ nullable: true }) make?: string;        // Beneteau
   @Column({ nullable: true }) model?: string;       // 47 Power
   @Column({ nullable: true }) registryNumber?: string;

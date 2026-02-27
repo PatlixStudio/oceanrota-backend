@@ -15,6 +15,7 @@ export class MarketplaceService {
   async create(dto: CreateListingDto, userId: number) {
     const listing = this.listingsRepo.create({
       ...dto,
+      category: dto.vessel.category,
       owner: { id: userId },
       vessel: {
         ...dto.vessel,

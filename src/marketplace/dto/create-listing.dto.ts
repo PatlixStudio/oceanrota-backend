@@ -12,9 +12,9 @@ export class CreateListingDto {
   @IsString()
   description!: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  category!: string; // Power / Sail / Other
+  category?: string; // Power / Sail / Other
 
   @IsNotEmpty()
   @IsString()
@@ -63,7 +63,6 @@ export class CreateListingDto {
    /** Status */
   @IsOptional() @IsEnum(ListingStatus)
   status?: ListingStatus;
-  
 
   @IsOptional()
   @IsBoolean()

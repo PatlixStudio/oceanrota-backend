@@ -3,7 +3,7 @@ import { IsOptional, IsString, IsNumber } from 'class-validator';
 export class CreateEngineDto {
   @IsOptional()
   @IsString()
-  engineMake?: string;
+  brand!: string;
 
   @IsOptional()
   @IsString()
@@ -22,6 +22,6 @@ export class CreateEngineDto {
   fuelType?: string;
 
   @IsOptional()
-  @IsString()
-  engineHours?: string;
+  @IsNumber() 
+  hours?: number;
 }

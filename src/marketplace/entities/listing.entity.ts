@@ -24,6 +24,9 @@ export class Listing {
   @Column({ type: 'text' })
   description!: string;
 
+  @Column({ nullable: true }) 
+  category!: string;
+
   @Column({ type: 'decimal', nullable: true })
   salePrice?: number;
 
