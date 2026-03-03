@@ -36,6 +36,9 @@ export class Listing {
   @Column({ nullable: true })
   currency?: string;
 
+  @Column({ nullable: true })
+  visibilityType!: string; // e.g. 'STANDARD', 'PREMIUM', 'EXCLUSIVE'
+
   @Column({ type: 'enum', enum: ListingStatus, default: ListingStatus.DRAFT, })
   status!: ListingStatus;
 

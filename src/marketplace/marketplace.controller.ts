@@ -66,7 +66,7 @@ export class MarketplaceController {
 
     await this.marketplaceService.attachImages(listingId, urls);
 
-    return { success: true, urls };
+    return { success: true, id: Number(listingId), urls };
   }
 
 
