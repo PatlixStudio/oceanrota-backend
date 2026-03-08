@@ -22,8 +22,6 @@ import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { multerOptions } from 'src/config/multer.config';
-import { randomUUID } from 'crypto';
-
 
 @ApiTags('Vessel Marketplace')
 @Controller('marketplace/listings')
@@ -71,7 +69,7 @@ export class MarketplaceController {
 
 
   @Get()
-  @ApiOperation({ summary: 'Get all active boat listings (paginated, sortable, filterable)' })
+  @ApiOperation({ summary: 'Get all active vessel listings (paginated, sortable, filterable)' })
   @ApiQuery({ name: 'page', required: false, example: 1 })
   @ApiQuery({ name: 'limit', required: false, example: 10 })
   @ApiQuery({ name: 'sort', required: false, example: 'newest' })

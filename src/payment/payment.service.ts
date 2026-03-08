@@ -3,6 +3,8 @@ import { CreatePaymentDto } from './dto/create-payment.dto';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
 import { StripeService } from './stripe/stripe.service';
 import { MarketplaceService } from 'src/marketplace/marketplace.service';
+import { FeaturedPlan } from 'src/common/enums/listing-enums';
+import { FeaturedPlanPrices } from 'src/common/constants/featured-plan.consts';
 
 @Injectable()
 export class PaymentService {
@@ -32,11 +34,10 @@ export class PaymentService {
     return `This action removes a #${id} payment`;
   }
 
-  async createFeaturedPayment(listingId: number, userId: number) {
-    const FEATURED_PRICE = 199;
-
+  async createFeaturedPayment( userId: number, listingId: number, featuredPlan: FeaturedPlan) {
     // Optional: verify listing exists & belongs to user
     const listing = await this.listingService.findOne(listingId);
+    const featuredPrice = FeaturedPlanPrices[featuredPlan];
 
     if (!listing) {
       throw new NotFoundException('Listing not found');
@@ -46,10 +47,14 @@ export class PaymentService {
       throw new BadRequestException('Listing is not featured');
     }
 
+    if (!featuredPrice) {
+      throw new BadRequestException('This Payment Plan is not exsist');
+    }
+
     return this.stripeService.createFeaturedPaymentIntent(
       listingId,
       userId,
-      FEATURED_PRICE,
+      featuredPrice,
     );
   }
 }

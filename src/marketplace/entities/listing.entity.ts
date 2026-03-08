@@ -10,7 +10,7 @@ import {
 } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
 import { Vessel } from './vessel.entity';
-import { ListingStatus, ListingPurpose } from 'src/common/enums/listing-enums';
+import { FeaturedPlan, ListingStatus, ListingPurpose } from 'src/common/enums/listing-enums';
 
 @Entity('listings')
 export class Listing {
@@ -62,8 +62,12 @@ export class Listing {
   @Column({ default: false })
   isFeatured!: boolean;       // Highlighted listing on homepage or search
 
-  @Column({ type: 'decimal', nullable: true })
-  featuredFeeUsd?: number;    // Fee paid to be featured
+
+  @Column({ type: 'enum', enum: FeaturedPlan, default: null, nullable: true})
+  featuredPlan?: FeaturedPlan;
+  
+  @Column({ type: 'timestamp', nullable: true })
+  featuredUntil?: Date;       // Optional expiry date for featured promotion
 
   @Column({ default: false })
   isNewArrival!: boolean;     // Recently added listing
@@ -73,9 +77,6 @@ export class Listing {
 
   @Column({ default: false })
   isVerified!: boolean;       // Platform-verified owner/vessel
-
-  @Column({ type: 'timestamp', nullable: true })
-  featuredUntil?: Date;       // Optional expiry date for featured promotion
 
   /** Optional flags */
   @Column({ default: true }) isActive!: boolean;

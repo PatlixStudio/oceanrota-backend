@@ -9,9 +9,11 @@ export class StripeService {
 
   private stripe: Stripe;
   constructor(private configService: ConfigService) {
-    this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-      apiVersion: '2026-02-25.clover',
-    });
+    this.stripe = new Stripe(
+      this.configService.get<string>('STRIPE_SECRET_KEY')!,
+      {
+        apiVersion: '2026-02-25.clover',
+      },);
   }
 
   async createPaymentIntent(amount: number, metadata: any) {

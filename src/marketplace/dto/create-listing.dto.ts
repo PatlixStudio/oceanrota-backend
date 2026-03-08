@@ -34,22 +34,34 @@ export class CreateListingDto {
   currency?: string;
 
   /** Location */
-  @IsOptional() @IsString() country?: string;
-  @IsOptional() @IsString() city?: string;
-  @IsOptional() @IsString() port?: string;
+  @IsOptional() 
+  @IsString() 
+  country?: string;
+
+  @IsOptional() 
+  @IsString() 
+  city?: string;
+
+  @IsOptional() 
+  @IsString() 
+  port?: string;
 
   /** Visibility & Promotion */
-  @IsOptional() @IsEnum(ListingVisibility)
+  @IsOptional()
+  @IsEnum(ListingVisibility)
   visibilityType?: ListingVisibility;
 
-  @IsOptional() @IsEnum(FeaturedPlan)
+  @IsOptional()
+  @IsBoolean()
+  isFeatured!: boolean;
+
+  @IsOptional() 
+  @IsEnum(FeaturedPlan)
   featuredPlan?: FeaturedPlan;
 
   @IsOptional() @IsDate()
   @Type(() => Date)
   featuredUntil?: Date;
-  
-  @IsOptional() @IsBoolean() featured?: boolean;
 
   /** Images */
   @IsOptional()
@@ -57,10 +69,10 @@ export class CreateListingDto {
   @IsString({ each: true })
   images?: string[];
 
-    /** file name stored after upload */
+  /** file name stored after upload */
   @IsOptional() @IsString() featuredImage?: string;
 
-   /** Status */
+  /** Status */
   @IsOptional() @IsEnum(ListingStatus)
   status?: ListingStatus;
 
